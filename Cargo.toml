@@ -1,0 +1,23 @@
+[package]
+name = "disk-serial-number"
+authors = ["Hayden Chang <m831718@gmail.com>"]
+description = "A Rust library to get disk serial numbers across different platforms."
+repository = "https://github.com/hayd1n/disk-serial-number-rs"
+version = "0.1.0"
+edition = "2024"
+readme = "README.md"
+license = "MIT"
+
+[dependencies]
+cfg-if = "1.0"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror = "2.0"
+
+# Windows only
+[target.'cfg(windows)'.dependencies]
+wmi = "0.17"
+
+# Linux only
+[target.'cfg(target_os = "linux")'.dependencies]
+udev = "0.9"
