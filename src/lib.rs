@@ -3,6 +3,7 @@ pub struct DiskInfo {
     pub name: String,
     pub model: Option<String>,
     pub serial_number: Option<String>,
+    pub removable: Option<bool>,
 }
 
 #[cfg(windows)]

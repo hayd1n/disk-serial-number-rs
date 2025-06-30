@@ -12,6 +12,11 @@ fn main() {
                 if let Some(serial) = &disk.serial_number {
                     println!(" - Serial Number: {}", serial);
                 }
+                if let Some(removable) = disk.removable {
+                    println!(" - Removable: {}", removable);
+                } else {
+                    println!(" - Removable: Unknown");
+                }
             }
         }
         Err(e) => {
