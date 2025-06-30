@@ -16,6 +16,8 @@ struct Win32_DiskDrive {
     model: String,
     // Serial number, may not exist
     serial_number: Option<String>,
+
+    media_type: Option<String>,
 }
 
 pub struct WindowsProvider;
@@ -39,11 +41,23 @@ impl DiskInfoProvider for WindowsProvider {
                 let serial = dev
                     .serial_number
                     .and_then(|s| if s.trim().is_empty() { None } else { Some(s) });
+                let removable = dev.media_type.and_then(|s| {
+                    if s.trim().is_empty() {
+                        None
+                    } else {
+                        let s_lower = s.to_lowercase();
+                        Some(
+                            s_lower.contains("removable media")
+                                || s_lower.contains("external hard disk media"),
+                        )
+                    }
+                });
                 DiskInfo {
                     // We use DeviceID as name, as it best represents the device in the system
                     name: dev.device_id,
                     model: Some(dev.model),
                     serial_number: serial,
+                    removable,
                 }
             })
             .collect();
