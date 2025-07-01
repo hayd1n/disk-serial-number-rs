@@ -12,6 +12,8 @@ struct LsblkDevice {
     // We only select devices of type "disk"
     #[serde(rename = "type")]
     device_type: String,
+    #[serde(rename = "rm")]
+    removable: bool,
 }
 
 #[derive(Deserialize)]
@@ -24,7 +26,7 @@ pub struct LinuxProvider;
 impl DiskInfoProvider for LinuxProvider {
     fn get_all_disks() -> Result<Vec<DiskInfo>, ProviderError> {
         let output = Command::new("lsblk")
-            .args(["-o", "NAME,MODEL,SERIAL,TYPE", "-J", "-b", "-d"]) // -d: only show disks themselves, not partitions
+            .args(["-o", "NAME,MODEL,SERIAL,TYPE,RM", "-J", "-b", "-d"]) // -d: only show disks themselves, not partitions
             .output()?;
 
         if !output.status.success() {
@@ -48,6 +50,7 @@ impl DiskInfoProvider for LinuxProvider {
                 serial_number: dev
                     .serial
                     .and_then(|s| if s.trim().is_empty() { None } else { Some(s) }),
+                removable: Some(dev.removable),
             })
             .collect();
 
