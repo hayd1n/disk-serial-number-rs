@@ -13,10 +13,13 @@ A Rust library to get disk serial numbers across different platforms.
 - Disk name
 - Disk model
 - Disk serial number
+- Is removable?
 
 ## Limitations
 
 Due to differences in operating systems and hardware platforms, the method for obtaining the disk serial number may vary. **The same hard drive may have different serial numbers on different systems.**
+
+Due to the lack of testing platforms, macOS currently only supports NVME and Serial ATA (aka SATA) drives.
 
 If you find a better method, please submit a PR.
 
