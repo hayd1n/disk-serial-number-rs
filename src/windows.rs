@@ -38,9 +38,18 @@ impl DiskInfoProvider for WindowsProvider {
         let disks = results
             .into_iter()
             .map(|dev| {
-                let serial = dev
-                    .serial_number
-                    .and_then(|s| if s.trim().is_empty() { None } else { Some(s) });
+                let serial = dev.serial_number.and_then(|s| {
+                    if s.trim().is_empty() {
+                        None
+                    } else {
+                        Some(s.trim().to_string())
+                    }
+                });
+                let model = if dev.model.trim().is_empty() {
+                    None
+                } else {
+                    Some(dev.model.trim().to_string())
+                };
                 let removable = dev.media_type.and_then(|s| {
                     if s.trim().is_empty() {
                         None
@@ -54,8 +63,8 @@ impl DiskInfoProvider for WindowsProvider {
                 });
                 DiskInfo {
                     // We use DeviceID as name, as it best represents the device in the system
-                    name: dev.device_id,
-                    model: Some(dev.model),
+                    name: dev.device_id.trim().to_string(),
+                    model: model,
                     serial_number: serial,
                     removable,
                 }

@@ -44,13 +44,21 @@ impl DiskInfoProvider for LinuxProvider {
             .into_iter()
             .filter(|dev| dev.device_type == "disk") // Filter devices with type "disk"
             .map(|dev| DiskInfo {
-                name: dev.name,
-                model: dev
-                    .model
-                    .and_then(|m| if m.trim().is_empty() { None } else { Some(m) }),
-                serial_number: dev
-                    .serial
-                    .and_then(|s| if s.trim().is_empty() { None } else { Some(s) }),
+                name: dev.name.trim().to_string(),
+                model: dev.model.and_then(|m| {
+                    if m.trim().is_empty() {
+                        None
+                    } else {
+                        Some(m.trim().to_string())
+                    }
+                }),
+                serial_number: dev.serial.and_then(|s| {
+                    if s.trim().is_empty() {
+                        None
+                    } else {
+                        Some(s.trim().to_string())
+                    }
+                }),
                 removable: Some(dev.removable || dev.hotplug),
             })
             .collect();
